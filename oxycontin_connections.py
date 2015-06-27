@@ -1,0 +1,128 @@
+import networkx as nx
+import json
+import pickle
+
+
+flagged_users_file = file("Hand_Flagged_Users.txt")
+graph_data = file ("07-2015_social_graph.json")
+
+flagged_users = set()
+reciprocal_users = set()
+
+
+line = flagged_users_file.readline()
+while line != "":
+    try:
+        flagged_users.add(int(line))
+        line = flagged_users_file.readline()
+    except ValueError:
+        pass
+        line = flagged_users_file.readline()
+flagged_users_file.close()
+
+print "Number of Flagged Users"
+print len(flagged_users)
+ 
+count1 = 0
+count2 = 0
+count3 = 0
+connected_users = set()
+file = open("Oxycontin_Connections.txt",'w')
+recips = open("Reciprocal_Oxy_Users.txt",'w')
+pantry = open("Reciprocal_Oxy_Social_Graph.json",'w')
+holding = set()
+while True:
+    line = graph_data.readline()
+    if line == "":
+        break
+    try:
+        j = json.loads(line)
+        if int(j["user_id"]) in flagged_users:
+            follower = set(j["follower_ids"]).intersection(flagged_users)
+            following = flagged_users.intersection(set(j["friend_ids"]))
+
+            for followers in follower:
+                file.write(str(j["user_id"]))
+                file.write(" ")
+                file.write(str(followers))
+                file.write("\n")
+                connected_users.add(int(j["user_id"]))
+                connected_users.add(int(followers))
+
+            for friends in following:
+                file.write(str(friends))
+                file.write(" ")
+                file.write(str(j["user_id"]))
+                file.write("\n") 
+                connected_users.add(int(j["user_id"])) 
+                connected_users.add(int(friends))
+
+            count1 = count1 + 1  
+
+            mutual = set(j["follower_ids"]).intersection(set(j["friend_ids"]))
+            temp = mutual.intersection(flagged_users)
+            for newbs in temp:
+                if int(newbs) and int(j["user_id"]) not in reciprocal_users:
+                    reciprocal_users.add(int(newbs))
+                    reciprocal_users.add(int(j["user_id"]))
+                    recips.write(str(j["user_id"]))
+                    recips.write(str(" "))
+                    recips.write(str(newbs))
+                    recips.write("\n")
+                    count2 = count2 + 1
+
+            if int(j["user_id"]) in reciprocal_users:         
+                if int(j["user_id"]) not in holding:
+                    json.dump(j,pantry)
+                    holding.add(int(j["user_id"]))
+                    pantry.write("\n")
+                    count3 = count3 + 1
+    except ValueError:
+        pass
+file.close()
+recips.close()        
+
+#graph_data.close()
+
+print "Number of Flagged Users in the Graph File"
+print count1
+print "Number of Flagged Users in the Graph File with Connections"
+print len(connected_users)
+
+# graph_data.seek(0)
+# count = 0
+# file = open("Reciprocal_Oxy_Users.txt",'w')
+# while True:
+#     line = graph_data.readline()
+#     if line == "":
+#         break
+#     try:
+#         j = json.loads(line)
+#         if int(j["user_id"]) in flagged_users:
+#             mutual = set(j["follower_ids"]).intersection(set(j["friend_ids"]))
+#             temp = mutual.intersection(flagged_users)
+#             for newbs in temp:
+#                 if int(newbs) and int(j["user_id"]) not in reciprocal_users:
+#                     reciprocal_users.add(int(newbs))
+#                     reciprocal_users.add(int(newbs))
+#                     file.write(str(j["user_id"]))
+#                     file.write(str(" "))
+#                     file.write(str(newbs))
+#                     file.write("\n")
+#                     count = count + 1
+#     except ValueError:
+#         pass
+# file.close()        
+
+print "Number of Reciprocal Oxy Users"
+print count2
+
+print "Between this many users:"
+print len(reciprocal_users)
+
+print "Number of Reciprocal Oxy Users in Graph File"
+print count3
+
+graph_data.close()
+
+
