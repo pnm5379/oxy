@@ -80,7 +80,8 @@ while True:
     except ValueError:
         pass
 file.close()
-recips.close()        
+recips.close()
+pantry.close()        
 
 #graph_data.close()
 
@@ -114,14 +115,70 @@ print len(connected_users)
 #         pass
 # file.close()        
 
-print "Number of Reciprocal Oxy Users"
+print "Number of Reciprocal Oxy User-Pairs"
 print count2
 
 print "Between this many users:"
 print len(reciprocal_users)
 
-print "Number of Reciprocal Oxy Users in Graph File"
+print "Of whom this many Users are in the Graph File"
 print count3
+
+graph_data.seek(0)
+
+recips = open("Reciprocal_Oxy_Users.txt",'r')
+pantry = open("Reciprocal_Oxy_Social_Graph.json",'r')
+file = open("Oxycontin_User_Social_Triangles.txt",'w')
+num = 0
+a = set()
+b = set()
+while True:
+    line = recips.readline()
+    if line == "":
+        break
+    try:
+        pair = set(line.split())
+        pair = [int(x) for x in pair]
+        pair = set(pair)
+        while True:
+            peep = pantry.readline()
+            if peep == "":
+                break
+            try:    
+                j = json.loads(peep)
+                #print pair
+                temp = set(j["user_id"])
+                temp = [int(x) for x in temp]
+                #print set(int(j["user_id"]))
+                #overlap = pair.intersection(set(int(j["user_id"])))
+                overlap = pair.intersection(temp)
+                print pair
+                print temp
+                print overlap
+                for people in overlap:
+                    if num == 0:
+                        a = set(int(j["follower_ids"])).intersection(set(int(j["friend_ids"])))
+                        print a
+                        num = 1
+                    else:
+                        b = set(int(j["follower_ids"])).intersection(set(int(j["friend_ids"])))
+                        print b
+                        num = 0           
+            except ValueError:
+                pass
+        print a
+        print b
+        tris = a.intersection(b)
+        for members in tris:
+            for originals in pair:
+                file.write(str(originals))
+                file.write(str(" "))
+            file.write(str(members))
+            file.write(str("\n"))
+    except ValueError:
+        pass
+
+
 
 graph_data.close()
 
