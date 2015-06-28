@@ -124,14 +124,18 @@ print len(reciprocal_users)
 print "Of whom this many Users are in the Graph File"
 print count3
 
-graph_data.seek(0)
+
 
 recips = open("Reciprocal_Oxy_Users.txt",'r')
 pantry = open("Reciprocal_Oxy_Social_Graph.json",'r')
 file = open("Oxycontin_User_Social_Triangles.txt",'w')
+equalateral = open("Oxycontin_User_Triangle_Thirds.txt",'w')
 num = 0
 a = set()
 b = set()
+count4 = 0
+count5 = 0
+#triangles = set()
 while True:
     line = recips.readline()
     if line == "":
@@ -140,6 +144,11 @@ while True:
         pair = set(line.split())
         pair = [int(x) for x in pair]
         pair = set(pair)
+        #print pair
+        pantry.seek(0)
+        a = set()
+        b = set()
+        tris = set()
         while True:
             peep = pantry.readline()
             if peep == "":
@@ -147,39 +156,65 @@ while True:
             try:    
                 j = json.loads(peep)
                 #print pair
-                temp = set(j["user_id"])
-                temp = [int(x) for x in temp]
+
+                #temp = set(j["user_id"])
+                #temp = [int(x) for x in temp]
+
                 #print set(int(j["user_id"]))
                 #overlap = pair.intersection(set(int(j["user_id"])))
-                overlap = pair.intersection(temp)
-                print pair
-                print temp
-                print overlap
-                for people in overlap:
+
+                #overlap = pair.intersection(temp)
+                #print pair
+                #print temp
+                #print overlap
+                #for people in overlap:
+                #print j["user_id"]
+                if int(j["user_id"]) in pair:
                     if num == 0:
-                        a = set(int(j["follower_ids"])).intersection(set(int(j["friend_ids"])))
-                        print a
+                        a = set(j["follower_ids"]).intersection(set(j["friend_ids"]))
+                        #print a
                         num = 1
                     else:
-                        b = set(int(j["follower_ids"])).intersection(set(int(j["friend_ids"])))
-                        print b
+                        b = set(j["follower_ids"]).intersection(set(j["friend_ids"]))
+                        #print b
                         num = 0           
             except ValueError:
                 pass
-        print a
-        print b
+        #print a
+        #print b
         tris = a.intersection(b)
+        #print len(a)
+        #print len(b)
+        #print len(tris)
+        if len(tris) > 0:
+            count4 = count4 + 1
         for members in tris:
             for originals in pair:
                 file.write(str(originals))
                 file.write(str(" "))
             file.write(str(members))
             file.write(str("\n"))
+            count5 = count5 + 1
+            #triangles.add(int(members))
+            equalateral.write(str(members))
+            equalateral.write(str("\n"))
     except ValueError:
         pass
 
+recips.close()
+pantry.close()
+file.close()
+equalateral.close()
+
+print "Of the Oxy-User Pairs, this many have Triangles:"
+print count4
+print "Totaling to this many Triangles:"
+print count5
+
+
+graph_data.seek(0)
+
+#print len(triangles)
 
 
 graph_data.close()
-
-
