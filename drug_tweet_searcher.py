@@ -19,7 +19,7 @@ line = tweets_file.readline()
 while line != "":
 	try:
 		j = json.loads(line)
-		tweet = set(j["text"].encode('unicode-escape').replace('\\',' ').split())
+		tweet = set(j["text"].encode('unicode-escape').replace('\\',' ').lower().split())
 		temp = keys.intersection(tweet)
 		if temp:
 			file.write(str(j["id"]))
