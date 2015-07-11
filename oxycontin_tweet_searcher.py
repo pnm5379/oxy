@@ -22,6 +22,7 @@ flagged_users = set()
 
 count = 0
 file = open("Flagged_Oxycontin_Tweets_Filtered.txt","w")
+raws = open("Flagged_Oxycontin_Tweets_Filtered.json","w")
 line = tweets_file.readline()
 while line != "":
 	try:
@@ -48,6 +49,8 @@ while line != "":
 					#oxy_tweets.add(j["id"])
 					flagged_users.add(str(j["user"]["id_str"]))
 					count = count + 1
+					json.dump(j,raws)
+					raws.write("\n")
 			elif hillbill:
 				h = heroin.intersection(temp)
 				if h:
@@ -64,6 +67,8 @@ while line != "":
 					#oxy_tweets.add(j["id"])
 					flagged_users.add(str(j["user"]["id_str"]))
 					count = count + 1
+					json.dump(j,raws)
+					raws.write("\n")
 			else:
 				file.write(str(j["id"]))
 				file.write(";")
@@ -78,6 +83,8 @@ while line != "":
 				#oxy_tweets.add(j["id"])
 				flagged_users.add(str(j["user"]["id_str"]))
 				count = count + 1
+				json.dump(j,raws)
+				raws.write("\n")
 		# else:
 		# 	double_tweets.add(j["id"])		
 	except ValueError:
@@ -86,6 +93,7 @@ while line != "":
 	line = tweets_file.readline()	
 tweets_file.close()
 file.close()
+raws.close
 	
 print "Number of Flagged Tweets:"	
 print count
