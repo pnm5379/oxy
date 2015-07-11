@@ -20,7 +20,7 @@ while line != "":
         line = flagged_users_file.readline()
 flagged_users_file.close()
 
-print "Number of Flagged Users"
+print "Number of Flagged Users:"
 print len(flagged_users)
  
 count1 = 0
@@ -85,9 +85,9 @@ pantry.close()
 
 #graph_data.close()
 
-print "Number of Flagged Users in the Graph File"
+print "Number of Flagged Users in the Graph File:"
 print count1
-print "Number of Flagged Users in the Graph File with Connections"
+print "Of Whom This Many Have Connections Amongst Each Other:"
 print len(connected_users)
 
 # graph_data.seek(0)
@@ -115,13 +115,13 @@ print len(connected_users)
 #         pass
 # file.close()        
 
-print "Number of Reciprocal Oxy User-Pairs"
+print "Number of Reciprocal Oxy User-Pairs:"
 print count2
 
 print "Between this many users:"
 print len(reciprocal_users)
 
-print "Of whom this many Users are in the Graph File"
+print "Of whom this many Users are in the Graph File:"
 print count3
 
 
