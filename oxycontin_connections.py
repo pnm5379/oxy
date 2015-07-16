@@ -130,11 +130,13 @@ recips = open("Reciprocal_Oxy_Users.txt",'r')
 pantry = open("Reciprocal_Oxy_Social_Graph.json",'r')
 file = open("Oxycontin_User_Social_Triangles.txt",'w')
 equalateral = open("Oxycontin_User_Triangle_Thirds.txt",'w')
+trinums = open("Oxycontin_User_Triangles_Num_By_Pair.txt",'w')
 num = 0
 a = set()
 b = set()
 count4 = 0
 count5 = 0
+count6 = 0
 #triangles = set()
 while True:
     line = recips.readline()
@@ -183,11 +185,16 @@ while True:
         #print a
         #print b
         tris = a.intersection(b)
+        if len(a) > 0 and len(b) > 0:
+            trinums.write(str(len(tris)))
+            trinums.write(str("\n"))
         #print len(a)
         #print len(b)
         #print len(tris)
         if len(tris) > 0:
             count4 = count4 + 1
+        if len(a) > 0 and len(b) > 0 and len(tris) == 0:
+            count6 = count6 + 1
         for members in tris:
             for originals in pair:
                 file.write(str(originals))
@@ -210,7 +217,8 @@ print "Of the Oxy-User Pairs, this many have Triangles:"
 print count4
 print "Totaling to this many Triangles:"
 print count5
-
+print "Number of Pairs (Both in Graph) and with No Triangles:"
+print count6
 
 graph_data.seek(0)
 
