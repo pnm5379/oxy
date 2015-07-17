@@ -124,19 +124,23 @@ print len(reciprocal_users)
 print "Of whom this many Users are in the Graph File:"
 print count3
 
-
+triangle_users = set()
+multi_triangles = set()
 
 recips = open("Reciprocal_Oxy_Users.txt",'r')
 pantry = open("Reciprocal_Oxy_Social_Graph.json",'r')
 file = open("Oxycontin_User_Social_Triangles.txt",'w')
 equalateral = open("Oxycontin_User_Triangle_Thirds.txt",'w')
 trinums = open("Oxycontin_User_Triangles_Num_By_Pair.txt",'w')
+oxytris = open("Flagged_Oxycontin_Users_Complete_Triangle.txt",'w')
+multiples = open("Oxycontin_Triangle_User_Multiple.txt",'w')
 num = 0
 a = set()
 b = set()
 count4 = 0
 count5 = 0
 count6 = 0
+count7 = 0
 #triangles = set()
 while True:
     line = recips.readline()
@@ -199,12 +203,25 @@ while True:
             for originals in pair:
                 file.write(str(originals))
                 file.write(str(" "))
+                if tris.intersection(flagged_users):
+                    oxytris.write(str(originals))
+                    oxytris.write(str(" "))
+                    count7 = count7 + 1
             file.write(str(members))
             file.write(str("\n"))
             count5 = count5 + 1
             #triangles.add(int(members))
             equalateral.write(str(members))
             equalateral.write(str("\n"))
+            if tris.intersection(flagged_users):
+                oxytris.write(str(members))
+                oxytris.write(str("\n"))
+            if members in triangle_users:
+                multi_triangles.add(members)
+                multiples.write(str(members))
+                multiples.write(str("\n"))
+            else:
+                triangle_users.add(members)
     except ValueError:
         pass
 
@@ -212,13 +229,21 @@ recips.close()
 pantry.close()
 file.close()
 equalateral.close()
+trinums.close()
+oxytris.close()
 
 print "Of the Oxy-User Pairs, this many have Triangles:"
 print count4
 print "Totaling to this many Triangles:"
 print count5
+print "Between this many unique additional users:"
+print len(triangle_users)
+print "With this many users in more than one triangle"
+print len(multi_triangles)
 print "Number of Pairs (Both in Graph) and with No Triangles:"
 print count6
+print "Number of Triangles with 3 Flagged Users:"
+print count7
 
 graph_data.seek(0)
 
