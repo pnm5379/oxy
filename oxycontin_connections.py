@@ -30,6 +30,9 @@ connected_users = set()
 file = open("Oxycontin_Connections.txt",'w')
 recips = open("Reciprocal_Oxy_Users.txt",'w')
 pantry = open("Reciprocal_Oxy_Social_Graph.json",'w')
+nodelings = open("Oxycontin_User_Edges.txt",'w')
+nodelings.write(str("Source Target"))
+nodelings.write(str("\n"))
 holding = set()
 while True:
     line = graph_data.readline()
@@ -48,6 +51,10 @@ while True:
                 file.write("\n")
                 connected_users.add(int(j["user_id"]))
                 connected_users.add(int(followers))
+                nodelings.write(str(j["user_id"]))
+                nodelings.write(str(" "))
+                nodelings.write(str(followers))
+                nodelings.write(str("\n"))
 
             for friends in following:
                 file.write(str(friends))
@@ -56,6 +63,10 @@ while True:
                 file.write("\n") 
                 connected_users.add(int(j["user_id"])) 
                 connected_users.add(int(friends))
+                nodelings.write(str(friends))
+                nodelings.write(str(" "))
+                nodelings.write(str(j["user_id"]))
+                nodelings.write(str("\n"))
 
             count1 = count1 + 1  
 
@@ -81,7 +92,8 @@ while True:
         pass
 file.close()
 recips.close()
-pantry.close()        
+pantry.close()  
+nodelings.close()      
 
 #graph_data.close()
 
@@ -89,6 +101,14 @@ print "Number of Flagged Users in the Graph File:"
 print count1
 print "Of Whom This Many Have Connections Amongst Each Other:"
 print len(connected_users)
+
+file = open("Oxycontin_User_Nodes.txt",'w')
+file.write(str("Users"))
+file.write(str("\n"))
+for people in connected_users:
+    file.write(str(people))
+    file.write(str("\n"))
+file.close()
 
 # graph_data.seek(0)
 # count = 0
