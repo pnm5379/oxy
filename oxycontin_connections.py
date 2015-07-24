@@ -4,7 +4,7 @@ import pickle
 
 
 flagged_users_file = file("Hand_Flagged_Users.txt")
-graph_data = file ("07-2015_social_graph.json")
+graph_data = file ("13-2015_social_graph.json")
 
 flagged_users = set()
 reciprocal_users = set()
@@ -34,6 +34,7 @@ nodelings = open("Oxycontin_User_Edges.txt",'w')
 nodelings.write(str("Source Target"))
 nodelings.write(str("\n"))
 holding = set()
+connected_pairs = set()
 while True:
     line = graph_data.readline()
     if line == "":
@@ -49,24 +50,34 @@ while True:
                 file.write(" ")
                 file.write(str(followers))
                 file.write("\n")
-                connected_users.add(int(j["user_id"]))
-                connected_users.add(int(followers))
-                nodelings.write(str(j["user_id"]))
-                nodelings.write(str(" "))
-                nodelings.write(str(followers))
-                nodelings.write(str("\n"))
+                #dubs_list = (str(j["user_id"])," ",str(followers))
+                dubs = ' '.join([str(j["user_id"]),str(followers)])
+                if dubs not in connected_pairs:
+                    connected_pairs.add(dubs)
+                    #print dubs
+                    connected_users.add(int(j["user_id"]))
+                    connected_users.add(int(followers))
+                    #nodelings.write(str(j["user_id"]))
+                    #nodelings.write(str(" "))
+                    #nodelings.write(str(followers))
+                    nodelings.write(dubs)
+                    nodelings.write(str("\n"))
 
             for friends in following:
                 file.write(str(friends))
                 file.write(" ")
                 file.write(str(j["user_id"]))
-                file.write("\n") 
-                connected_users.add(int(j["user_id"])) 
-                connected_users.add(int(friends))
-                nodelings.write(str(friends))
-                nodelings.write(str(" "))
-                nodelings.write(str(j["user_id"]))
-                nodelings.write(str("\n"))
+                file.write("\n")
+                dubs = ' '.join([str(friends),str(j["user_id"])])
+                if dubs not in connected_pairs: 
+                    connected_pairs.add(dubs)
+                    connected_users.add(int(j["user_id"])) 
+                    connected_users.add(int(friends))
+                    #nodelings.write(str(friends))
+                    #nodelings.write(str(" "))
+                    #nodelings.write(str(j["user_id"]))
+                    nodelings.write(dubs)
+                    nodelings.write(str("\n"))
 
             count1 = count1 + 1  
 
@@ -102,13 +113,13 @@ print count1
 print "Of Whom This Many Have Connections Amongst Each Other:"
 print len(connected_users)
 
-file = open("Oxycontin_User_Nodes.txt",'w')
-file.write(str("Users"))
-file.write(str("\n"))
-for people in connected_users:
-    file.write(str(people))
-    file.write(str("\n"))
-file.close()
+# file = open("Oxycontin_User_Nodes.txt",'w')
+# file.write(str("Users"))
+# file.write(str("\n"))
+# for people in connected_users:
+#     file.write(str(people))
+#     file.write(str("\n"))
+# file.close()
 
 # graph_data.seek(0)
 # count = 0
