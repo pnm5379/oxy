@@ -113,13 +113,14 @@ print count1
 print "Of Whom This Many Have Connections Amongst Each Other:"
 print len(connected_users)
 
-# file = open("Oxycontin_User_Nodes.txt",'w')
-# file.write(str("Users"))
-# file.write(str("\n"))
-# for people in connected_users:
-#     file.write(str(people))
-#     file.write(str("\n"))
-# file.close()
+file = open("Oxycontin_User_Nodes.txt",'w')
+file.write(str("Id Label"))
+file.write(str("\n"))
+for people in connected_users:
+    file.write(str(people))
+    file.write(str(" Oxy"))
+    file.write(str("\n"))
+file.close()
 
 # graph_data.seek(0)
 # count = 0
@@ -279,6 +280,5 @@ print count7
 graph_data.seek(0)
 
 #print len(triangles)
-
 
 graph_data.close()
