@@ -173,6 +173,8 @@ count4 = 0
 count5 = 0
 count6 = 0
 count7 = 0
+tripplet_thirds = set()
+full_triangles = set()
 #triangles = set()
 while True:
     line = recips.readline()
@@ -235,17 +237,19 @@ while True:
             for originals in pair:
                 file.write(str(originals))
                 file.write(str(" "))
-                if tris.intersection(flagged_users):
+                if members in flagged_users:
                     oxytris.write(str(originals))
                     oxytris.write(str(" "))
                     count7 = count7 + 1
+                    full_triangles.add(originals)
+                    full_triangles.add(members)    
             file.write(str(members))
             file.write(str("\n"))
             count5 = count5 + 1
             #triangles.add(int(members))
             equalateral.write(str(members))
             equalateral.write(str("\n"))
-            if tris.intersection(flagged_users):
+            if members in flagged_users:
                 oxytris.write(str(members))
                 oxytris.write(str("\n"))
             if members in triangle_users:
@@ -264,6 +268,12 @@ equalateral.close()
 trinums.close()
 oxytris.close()
 
+file = open("Complete_Oxy_Triangle_Users.txt",'w')
+for people in full_triangles:
+    file.write(str(people))
+    file.write(str("\n"))
+file.close
+
 print "Of the Oxy-User Pairs, this many have Triangles:"
 print count4
 print "Totaling to this many Triangles:"
@@ -276,6 +286,8 @@ print "Number of Pairs (Both in Graph) and with No Triangles:"
 print count6
 print "Number of Triangles with 3 Flagged Users:"
 print count7
+print "Between this Many Different People:"
+print len(full_triangles)
 
 graph_data.seek(0)
 
