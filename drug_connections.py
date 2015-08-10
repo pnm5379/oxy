@@ -175,6 +175,8 @@ count7 = 0
 tripplet_thirds = set()
 full_triangles = set()
 #triangles = set()
+triplicates = set('Start')
+temp_triplicates = set()
 while True:
     line = recips.readline()
     if line == "":
@@ -233,15 +235,24 @@ while True:
         if len(a) > 0 and len(b) > 0 and len(tris) == 0:
             count6 = count6 + 1
         for members in tris:
+            temp_triplicates = set()
+            n = 0
+            p1 = 0
+            p2 = 0
             for originals in pair:
                 file.write(str(originals))
                 file.write(str(" "))
                 if members in flagged_users:
                     oxytris.write(str(originals))
                     oxytris.write(str(" "))
-                    count7 = count7 + 1
+                    #count7 = count7 + 1
                     full_triangles.add(originals)
-                    full_triangles.add(members)    
+                    full_triangles.add(members)  
+                    if n == 0:
+                        p1 = int(originals)
+                    if n == 1:
+                        p2 = int(originals)
+                n = 1     
             file.write(str(members))
             file.write(str("\n"))
             count5 = count5 + 1
@@ -251,6 +262,20 @@ while True:
             if members in flagged_users:
                 oxytris.write(str(members))
                 oxytris.write(str("\n"))
+                temp_triplicates.add(' '.join([str(members),str(p1),str(p2)]))   
+                temp_triplicates.add(' '.join([str(members),str(p2),str(p1)])) 
+                temp_triplicates.add(' '.join([str(p1),str(members),str(p2)]))   
+                temp_triplicates.add(' '.join([str(p2),str(members),str(p1)]))  
+                temp_triplicates.add(' '.join([str(p1),str(p2),str(members)]))   
+                temp_triplicates.add(' '.join([str(p2),str(p1),str(members)]))
+                #print temp_triplicates
+                #print triplicates
+                jib = set()
+                jib = temp_triplicates.intersection(triplicates)
+                if len(jib) == 0: 
+                    count7 = count7 + 1
+                    for groups in temp_triplicates:
+                        triplicates.add(groups)
             if members in triangle_users:
                 multi_triangles.add(members)
                 multiples.write(str(members))

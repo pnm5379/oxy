@@ -166,6 +166,9 @@ equalateral = open("Oxycontin_User_Triangle_Thirds.txt",'w')
 trinums = open("Oxycontin_User_Triangles_Num_By_Pair.txt",'w')
 oxytris = open("Flagged_Oxycontin_Users_Complete_Triangle.txt",'w')
 multiples = open("Oxycontin_Triangle_User_Multiple.txt",'w')
+nonrecip = open("Oxycontin_Non-Reciprocal_Triangles.txt",'w')
+multinonrecip = open("Oxycontin_Non-Reciprocal_Tri_Users.txt",'w')
+oxynontris = open("Full_Nonreciprocal_Oxycontin_Users.txt",'w')
 num = 0
 a = set()
 b = set()
@@ -175,6 +178,25 @@ count6 = 0
 count7 = 0
 tripplet_thirds = set()
 full_triangles = set()
+c = set()
+d = set()
+e = set()
+f = set()
+g = set()
+h = set()
+count8 = 0
+count9 = 0
+count10 = 0 
+count11 = 0
+full_nonrecips = set()
+nonrecip_triangle_users = set()
+nonrecip_multi_tris_users = set()
+triplicates = set('Start')
+#triplicates.add(set('Start')))
+temp_triplicates = set()
+nonrecip_triplicates = set('Start')
+#nonrecip_triplicates.add(set('Start'))
+temp_nonrecip_triplicates = set()
 #triangles = set()
 while True:
     line = recips.readline()
@@ -189,6 +211,13 @@ while True:
         a = set()
         b = set()
         tris = set()
+        c = set()
+        d = set()
+        e = set()
+        f = set()
+        g = set()
+        h = set()
+        nontris = set()
         while True:
             peep = pantry.readline()
             if peep == "":
@@ -212,10 +241,26 @@ while True:
                 if int(j["user_id"]) in pair:
                     if num == 0:
                         a = set(j["follower_ids"]).intersection(set(j["friend_ids"]))
+                        c = set(j["follower_ids"])
+                        d = set(j["friend_ids"])
+                        for dudes in c:
+                            e.add(dudes)
+                        for dudes in d:
+                            e.add(dudes)
+                        #e.add(c)
+                        #e.add(d)
                         #print a
                         num = 1
                     else:
                         b = set(j["follower_ids"]).intersection(set(j["friend_ids"]))
+                        f = set(j["follower_ids"])
+                        g = set(j["friend_ids"])
+                        for dudes in f:
+                            h.add(dudes)
+                        for dudes in g:
+                            h.add(dudes)
+                        #h.add(f)
+                        #h.add(g)
                         #print b
                         num = 0           
             except ValueError:
@@ -223,6 +268,7 @@ while True:
         #print a
         #print b
         tris = a.intersection(b)
+        nontris = e.intersection(h)
         if len(a) > 0 and len(b) > 0:
             trinums.write(str(len(tris)))
             trinums.write(str("\n"))
@@ -234,15 +280,24 @@ while True:
         if len(a) > 0 and len(b) > 0 and len(tris) == 0:
             count6 = count6 + 1
         for members in tris:
+            temp_triplicates = set()
+            n = 0
+            p1 = 0
+            p2 = 0
             for originals in pair:
                 file.write(str(originals))
                 file.write(str(" "))
                 if members in flagged_users:
                     oxytris.write(str(originals))
                     oxytris.write(str(" "))
-                    count7 = count7 + 1
+                    #count7 = count7 + 1
                     full_triangles.add(originals)
-                    full_triangles.add(members)    
+                    full_triangles.add(members)
+                    if n == 0:
+                        p1 = int(originals)
+                    if n == 1:
+                        p2 = int(originals)
+                n = 1    
             file.write(str(members))
             file.write(str("\n"))
             count5 = count5 + 1
@@ -252,12 +307,78 @@ while True:
             if members in flagged_users:
                 oxytris.write(str(members))
                 oxytris.write(str("\n"))
+                temp_triplicates.add(' '.join([str(members),str(p1),str(p2)]))   
+                temp_triplicates.add(' '.join([str(members),str(p2),str(p1)])) 
+                temp_triplicates.add(' '.join([str(p1),str(members),str(p2)]))   
+                temp_triplicates.add(' '.join([str(p2),str(members),str(p1)]))  
+                temp_triplicates.add(' '.join([str(p1),str(p2),str(members)]))   
+                temp_triplicates.add(' '.join([str(p2),str(p1),str(members)]))
+                #print temp_triplicates
+                #print triplicates
+                jib = set()
+                jib = temp_triplicates.intersection(triplicates)
+                if len(jib) == 0: 
+                    count7 = count7 + 1
+                    for groups in temp_triplicates:
+                        triplicates.add(groups)
             if members in triangle_users:
                 multi_triangles.add(members)
                 multiples.write(str(members))
                 multiples.write(str("\n"))
             else:
                 triangle_users.add(members)
+        if len(nontris) > 0:
+            count8 = count8 + 1
+        elif len(nontris) == 0 and len(e) > 0 and len(h) > 0:
+            count9 = count9 + 1
+        for members in nontris:
+            temp_nonrecip_triplicates = set()
+            n = 0
+            p1 = 0
+            p2 = 0
+            for originals in pair:
+                nonrecip.write(str(originals))
+                nonrecip.write(str(" "))
+                if members in flagged_users:
+                    oxynontris.write(str(originals))
+                    oxynontris.write(str(" "))
+                    #count10 = count10 + 1
+                    full_nonrecips.add(originals)
+                    full_nonrecips.add(members) 
+                    if n == 0:
+                        p1 = int(originals)
+                    if n == 1:
+                        p2 = int(originals)
+                n = 1     
+            nonrecip.write(str(members))
+            nonrecip.write(str("\n"))
+            count11 = count11 + 1
+            #triangles.add(int(members))
+            #equalateral.write(str(members))
+            #equalateral.write(str("\n"))
+            if members in flagged_users:
+                oxynontris.write(str(members))
+                oxynontris.write(str("\n"))
+                temp_nonrecip_triplicates.add(' '.join([str(members),str(p1),str(p2)]))   
+                temp_nonrecip_triplicates.add(' '.join([str(members),str(p2),str(p1)])) 
+                temp_nonrecip_triplicates.add(' '.join([str(p1),str(members),str(p2)]))   
+                temp_nonrecip_triplicates.add(' '.join([str(p2),str(members),str(p1)]))  
+                temp_nonrecip_triplicates.add(' '.join([str(p1),str(p2),str(members)]))   
+                temp_nonrecip_triplicates.add(' '.join([str(p2),str(p1),str(members)]))
+                #print temp_nonrecip_triplicates
+                #print nonrecip_triplicates
+                jib = set()
+                jib = temp_nonrecip_triplicates.intersection(nonrecip_triplicates)
+                if len(jib) == 0:
+                    count10 = count10 + 1
+                    for groups in temp_nonrecip_triplicates:
+                        nonrecip_triplicates.add(groups)
+            if members in nonrecip_triangle_users:
+                nonrecip_multi_tris_users.add(members)
+                multinonrecip.write(str(members))
+                multinonrecip.write(str("\n"))
+            else:
+                nonrecip_triangle_users.add(members)       
     except ValueError:
         pass
 
@@ -267,9 +388,17 @@ file.close()
 equalateral.close()
 trinums.close()
 oxytris.close()
+multinonrecip.close()
+oxynontris.close()
 
 file = open("Complete_Oxy_Triangle_Users.txt",'w')
 for people in full_triangles:
+    file.write(str(people))
+    file.write(str("\n"))
+file.close
+
+file = open("Complete_Oxy_Nonrecip_Triangle_Users.txt",'w')
+for people in full_nonrecips:
     file.write(str(people))
     file.write(str("\n"))
 file.close
@@ -288,6 +417,22 @@ print "Number of Triangles with 3 Flagged Users:"
 print count7
 print "Between this Many Different People:"
 print len(full_triangles)
+
+print " "
+print "Of the Oxy_User Pairs, this many have Nonreciprocal Triangles:"
+print count8
+print "Totaling to this many Nonreciprocal Triangles:"
+print count11
+print "Between this many unique additional users:"
+print len(nonrecip_triangle_users)
+print "With this many users in more than one nonreciprocal triangle"
+print len(nonrecip_multi_tris_users)
+print "Number of Pairs (Both in Graph) and with No Nonreciprocal Triangles:"
+print count9
+print "Number of Nonreciprocal Triangles with 3 Flagged Users:"
+print count10
+print "Between this Many Different People:"
+print len(full_nonrecips)
 
 graph_data.seek(0)
 
