@@ -4,10 +4,12 @@ import pickle
 
 flagged_users_file = file("Hand_Flagged_Users.txt")
 multi_triangles_file = file("Oxycontin_Triangle_User_Multiple.txt")
+multi_nonrecip_file = open("Oxycontin_Non-Reciprocal_Tri_Users.txt")
 graph_data = file ("13-2015_social_graph.json")
 
 flagged_users = set()
 multi_triangle_users = set()
+multi_nonrecip_users = set()
 
 line = flagged_users_file.readline()
 while line != "":
@@ -29,12 +31,24 @@ while line != "":
         line = multi_triangles_file.readline()
 multi_triangles_file.close()
 
+line = multi_nonrecip_file.readline()
+while line != "":
+    try:
+        multi_nonrecip_users.add(int(line))
+        line = multi_nonrecip_file.readline()
+    except ValueError:
+        pass
+        line = multi_nonrecip_file.readline()
+multi_nonrecip_file.close()
+
 
 oxy_and_mulit_tris = set()
 for oxys in flagged_users:
     oxy_and_mulit_tris.add(oxys)
 for tris in multi_triangle_users:
     oxy_and_mulit_tris.add(tris)
+for nons in multi_nonrecip_users:
+    oxy_and_mulit_tris.add(nons)
 nodelings = open("Oxy_Tris_User_Edges.txt",'w')
 nodelings.write(str("Source Target"))
 nodelings.write(str("\n"))
@@ -76,6 +90,7 @@ graph_data.close()
 
 count1 = 0
 count2 = 0
+count3 = 0
 file = open("Oxy_Tris_User_Nodes.txt",'w')
 file.write("Id Label")
 file.write("\n")
@@ -90,9 +105,22 @@ for nodes in connected_users:
         file.write(str(" Tri"))
         file.write(str("\n"))
         count2 = count2 + 1
+    elif nodes in multi_nonrecip_users:
+        file.write(str(nodes))
+        file.write(str(" Non"))
+        file.write(str("\n"))
+        count3 = count3 + 1 
 file.close()
 
-print "Number of Oxycontin Users:"
+print "Number of Oxycontin Users in List:"
+print len(flagged_users)
+print "Number of Oxycontin Users found via Connections:"
 print count1
-print "Number of Triangle Users:"
+print "Number of Triangle Users in List:"
+print len(multi_triangle_users)
+print "Number of Triangle Users found via Connections:"
 print count2
+print "Number of Nonreciprocal Triangle Users in List:"
+print len(multi_nonrecip_users)
+print "Number of Nonreciprocal Triangle Users found via Connections"
+print count3
